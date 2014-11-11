@@ -1,0 +1,56 @@
+#RequestsTable { border-collapse: collapse; }
+#RequestsTable th{
+		border: 1px solid;
+		background: #A9A9A9;
+	}
+#RequestsTable td{ border: 1px solid; }
+#RequestsTable tr{ background: #b8d1f3; }
+#RequestsTable tr:nth-child(odd){ background: #FFFFFF; }
+#RequestsTable tr:nth-child(even){ background: #E3E3E3; }
+
+.tdPrec {
+	text-align: center;
+	width: 80px;
+}
+.tdPrecPos {
+	font-weight: bold;
+	color: green;
+	text-align: center;
+	background-color: #66FF99;
+}
+.tdPrecNeg {
+	font-weight: bold;
+	text-align: center;
+	color: red;
+	background-color: #FFCCCC;
+}
+.tdPrecNet {
+	font-weight: bold;
+	color: blue;
+	text-align: center;
+	background-color: #99C2FF;
+}
+
+.imgTon {
+	width: 30px;
+	height: 30px;
+	margin: 0 auto;
+}
+
+.tdProcessing {
+	text-align: center;
+}
+
+#divUpload {
+	visibility: hidden;
+	width: 500px;
+	height: 400px;
+	border: 1px solid;
+	position:absolute !important;
+	top:50% !important;
+	left:50% !important;
+	margin-top:-94px !important;
+	margin-left:-130px !important;
+	z-index:101;
+	background: #FFFFFF;
+}

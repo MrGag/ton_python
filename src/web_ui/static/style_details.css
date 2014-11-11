@@ -1,0 +1,126 @@
+h1 {
+	text-align: center;
+}
+
+h2 {
+	text-align: left;
+}
+
+*.requests_name {
+	text-align: left;
+}
+
+#divTitle {
+	width: 95%;
+	margin: 0 auto;
+}
+
+#divReqDetails {
+	width: 95%;
+	/*border: 1px solid;*/
+	margin: 0 auto;
+}
+
+#ReqDetails {
+	width: 100%;
+	/*border: 1px solid;*/
+	border-radius: 7px;
+	border-collapse: collapse;
+	margin: 0 auto;
+}
+
+#ReqDetails tr{
+		background: #b8d1f3;
+	}
+#ReqDetails tr:nth-child(odd){ 
+		background: #b8d1f3;
+	}
+#ReqDetails tr:nth-child(even){
+		background: #dae5f4;
+	}
+
+.tdDetName {
+	width: 25%;
+	text-align: left;
+	text-indent: 5px;
+	border: 1px solid;
+	font-weight: bold;
+	margin: 0 auto;
+}
+
+.tdDetVal {
+	width: 75%;
+	border: 1px solid;
+	text-align: left;
+	text-indent: 5px;
+	margin: 0 auto;
+}
+
+#divCharts {
+	width: 95%;
+	/*border: 1px solid;*/
+	height: 450px;
+	margin: 0 auto;
+}
+
+#pieChart_ton {
+	width: 520px;
+	border: 1px solid;
+	border-radius: 7px;
+	float: left;
+	margin-right: 10px;
+}
+
+#pieChart_docs_tonobj {
+	width: 520px;
+	border: 1px solid;
+	border-radius: 7px;
+	float: right;
+}
+
+#divListDocs {
+	width:95%;
+	margin: 0 auto;
+	
+}
+
+.divDoc {
+	width: 100%;
+	background-color: #E0ECF8;
+	border-radius: 10px;
+	margin: 0 auto;
+	padding-bottom: 5px;
+}
+
+.divSents {
+	width: 90%;
+	/*background-color: #FFFFFF;*/
+	margin-left: 35px;
+}
+
+.imgTon {
+	width: 30px;
+	height: 30px;
+}
+
+.sentpos {
+	color:#006600;
+	width:95%;
+}
+
+.sentneg {
+	color:#CC0000;
+	width:95%;
+}
+
+.sentnet {
+	color:#000000;
+	width:95%;
+}
+
+#bottom {
+	/*width: 30%;*/
+	height: 50px;
+	/*background-color: #345345;*/
+	margin: 0 auto;
+}

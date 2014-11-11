@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head>
+	<title>Анализ тональности</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style_list.css')}}">
+</head>
+<body>
+<h1>Анализ тональности</h1>
+<a class="addNewRequest" href="/upload/" target="_blank">Добавить новый запрос для обработки на тональность</a>
+<h2>Список запросов</h2>
+<div>
+	<table id="RequestsTable">
+	<th>Название запроса</th>
+	<th>Объект тон.</th>
+	<th>Дата</th>
+	<th><img src="static/img/pos.png" class="imgTon" alt="поз. док."></th>
+	<th><img src="static/img/neg.png" class="imgTon" alt="нег. док."></th>
+	<th><img src="static/img/net.png" class="imgTon" alt="нейт. док."></th>
+	<th colspan="2"></th>
+	{% for request in requests %}
+		<tr>
+			<td class="requests_name">{{request.name}}</td>
+			<td>{{request.ton_name}}</td>
+			<td>{{request.date}}</td>
+			{% if request.status == "complete"%}
+			<td class="tdPrec{% if request.ton == 'pos' %}Pos{% endif %}">{{request.pos}}%</td>
+			<td class="tdPrec{% if request.ton == 'neg' %}Neg{% endif %}">{{request.neg}}%</td>
+			<td class="tdPrec{% if request.ton == 'net' %}Net{% endif %}">{{request.net}}%</td>
+			<td><a href="/details?id_req={{request.id_req}}">Подробнее</a></td>
+			<td><input type="button" onclick="return del_request({{request.id_req}})" value="Удалить"></td>
+			{% else %}
+			<td colspan="4" class="tdProcessing">Обрабатывается, завершено {{request.complete_percent}}%</td>
+			<td><input type="button" onclick="return del_request({{request.id_req}})" value="Удалить"></td>
+			{% endif %}
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+
+<script type="text/javascript">
+	function del_request(req_id){
+		if (confirm("Удалить запрос?")){
+			var xmlHttp = null;
+			xmlHttp = new XMLHttpRequest();
+			xmlHttp.open( "GET", "/delete_request?id_req=" + req_id, false );
+			xmlHttp.send( null );
+			window.location.reload();
+		}
+	}
+</script>
+</body>
+</html>

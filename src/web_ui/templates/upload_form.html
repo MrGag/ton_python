@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head>
+	<title>Загрузка нового запроса</title>
+</head>
+<body>
+{% if upload_req %}
+<p>Запрос успешно направлен на анализ тональности.</p>
+<p>Уникальный идентификатор запроса: {{req_uuid}}</p>
+<input type="button" value="Закрыть" onclick="window.close()">
+{% else %}
+<h1>Добавление нового запрося для анализа на тональность</h1>
+<form enctype="multipart/form-data" method="post" action="/upload/">
+	<input type="file" name="request_file">
+	<br></br>
+	<h3>Объект тональности</h3>
+	<input type="text" name="ton_name">
+	<br></br>
+	<input type="submit">
+</form>
+{% endif %}
+</body>
+</html>

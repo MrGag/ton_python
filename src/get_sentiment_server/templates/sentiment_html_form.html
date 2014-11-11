@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head>
+	<title>Sentiment</title>
+</head>
+<body>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script type="text/javascript">
+		function post_sent(){
+			$("#result_txt").text("");
+			$("#result_dicts").text("");
+			alert($("#sent_text").val());
+			$.ajax({
+	  				type: "POST",
+	  				url: "http://127.0.0.1:5000/",
+	  				contentType: "text/plain; charset:utf-8",
+	  				data: $("#sent_text").val(),
+	  				dataType: "json"
+	  			   }
+	  			  )
+				.done(function(data){
+	  								$("#result_txt").text(data.res);
+	  								$("#result_dicts").text(JSON.stringify(data));
+	  								});
+		};
+	</script>
+Введите текст для определиня тональности
+<p></p>
+<textarea name="sent_txt" cols="50" rows="5" id="sent_text"></textarea>
+<p></p>
+<button type="submit" value="text" onclick="post_sent()">Определить тональность</button>
+<p></p>
+<!-- <text name="result_txt" id="result_txt">Результат<text> -->
+<div id="result_txt"></div>
+<div id="result_dicts"></div>
+</body>
+</html>

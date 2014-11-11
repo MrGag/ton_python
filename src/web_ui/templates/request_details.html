@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head>
+	<title>Анализ тональности</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style_details.css')}}">
+</head>
+<body>
+
+<div id="divTitle">
+	<a href="/">Список всех запросов</a>
+	<h1>Детализация запроса</h1>
+</div>
+
+<!-- Основные параметры запроса -->
+<div id="divReqDetails">
+	<h2>Общие сведения о запросе</h2>
+	<table id="ReqDetails">
+		<tr>
+			<td class="tdDetName">Дата добавления:</td>
+			<td class="tdDetVal">{{ton_request.date}}</td>
+		</tr>
+		<tr>
+			<td class="tdDetName">Название запроса:</td>
+			<td class="tdDetVal">{{ton_request.name}}</td>
+		</tr>
+		<tr>
+			<td class="tdDetName">Объект тональности:</td>
+			<td class="tdDetVal">{{ton_request.tonObjects}}</td>
+		</tr>
+		<tr>
+			<td class="tdDetName">Общее число документов:</td>
+			<td class="tdDetVal">{{ton_request.count_docs}}</td>
+		</tr>
+	</table>
+</div>
+
+<!-- Графики -->
+<div id="divCharts">
+	<h2>Графики тональности</h2>
+	<p>Кликните на цветную область для отображеня списка соответствющих документов.</p>
+	<div id="pieChart_ton"></div>
+	<div id="pieChart_docs_tonobj"></div>
+</div>
+
+<!-- Список документов -->
+<div id="divListDocs">
+	{% if type_ton_docs == "pos" %}
+	<h2>Список позитивных документов и их тональных предложений (поз./нег.)</h2>
+	{% elif type_ton_docs == "neg"%}
+	<h2>Список негативных документов и их тональных предложений (поз./нег.)</h2>
+	{% elif type_ton_docs == "net"%}
+	<h2>Список нейтральных документов (поз./нег.)</h2>
+	{% elif type_ton_docs == "all_with_ton_obj"%}
+	<h2>Список всех документов с объектом тональности и их тональных предложений (поз./нег.)</h2>
+	{% elif type_ton_docs == "all_without_ton_obj"%}
+	<h2>Список документов без объекта тональности</h2>
+	{% else %}
+<!-- 	<p><a href="/details?id_req={{id_req}}&docs_ton_type=all">Отобразить все документы с объектом тональности</a></p> -->
+	{% endif %}
+	
+	{% for doc in list_docs %}
+			<div class="divDoc">
+				<h3>
+					<img class="imgTon" src="static/img/{{doc.ton}}.png">
+					Документ: {{doc.name}} (<a href="{{doc.url}}">текст</a>)
+				</h3>
+				<!-- <div class="divSents"> -->
+				<ul class="divSents">
+					{% for sent in doc.ton_sents %}
+					<li class="sent{{sent.sent_ton}}">{{sent.text}} ({{sent.pos}}/{{sent.neg}})</li>
+						<!-- <p class="sent{{sent.sent_ton}}">{{sent.text}} ({{sent.pos}}/{{sent.neg}})</p> -->
+					{% endfor %}
+				</ul>
+				<!-- </div> -->
+			</div>
+	{% endfor %}
+</div>
+<div id="bottom">
+	
+</div>
+
+<script src="/static/d3/d3.min.js"></script>
+<script src="/static/d3/d3pie.min.js"></script>
+
+<script>
+var pie = new d3pie("pieChart_ton", {
+	"header": {
+		"title": {
+			"text": "Распределение тональности в документах",
+			"fontSize": 22,
+			"font": "verdana"
+			}
+	},
+	"size": {
+		"canvasHeight": 350,
+		"canvasWidth": 510,
+		"pieInnerRadius": "50%",
+		"pieOuterRadius": "80%"
+	},
+	"data": {
+		"content": [
+			{
+				"label": "Положительных",
+				"value": {{ton_request.count_pos}},
+				"color": "#23c14c"
+			},
+			{
+				"label": "Отрицательных",
+				"value": {{ton_request.count_neg}},
+				"color": "#a61f1f"
+			},
+			{
+				"label": "Нейтральных",
+				"value": {{ton_request.count_net}},
+				"color": "#4872eb"
+			}
+		]
+	},
+	"labels": {
+		"outer": {
+			"format": "label-value2",
+			"pieDistance": 32
+		},
+		"inner": {
+			// "format": "none"
+		},
+		"mainLabel": {
+			"font": "verdana",
+			"fontSize": 16
+		},
+		"percentage": {
+			"color": "#FFFFFF",
+			"font": "verdana",
+			"fontSize": 16,
+			"decimalPlaces": 0
+		},
+		"value": {
+			"color": "#000000",
+			"font": "verdana",
+			"fontSize": 16
+		},
+		"lines": {
+			"enabled": true
+		}
+	},
+	"effects": {
+		"load": {
+			"effect": "none",
+			"speed": 100
+		},
+		"pullOutSegmentOnClick": {
+			"effect": "linear",
+			"speed": 100,
+			"size": 30
+		}
+	},
+	"misc": {
+		"gradient": {
+			"enabled": true,
+			"percentage": 80,
+			"color": ""
+		}
+	},
+	"callbacks": {
+		onClickSegment: function(seg){
+			console.log(seg)
+			if (seg.index == 0) {
+				window.location.href = "/details?id_req={{id_req}}&docs_ton_type=pos"
+			}
+			else if (seg.index == 1) {
+				window.location.href = "/details?id_req={{id_req}}&docs_ton_type=neg"
+			}
+			else if (seg.index == 2) {
+				window.location.href = "/details?id_req={{id_req}}&docs_ton_type=net"
+			}
+		}
+	}
+});
+</script>
+
+<script>
+var pie = new d3pie("pieChart_docs_tonobj", {
+	"header": {
+		"title": {
+			"text": "Наличие объекта тональности в документах",
+			"fontSize": 22,
+			"font": "verdana"
+			}
+	},
+	"size": {
+		"canvasHeight": 350,
+		"canvasWidth": 510,
+		"pieInnerRadius": "50%",
+		"pieOuterRadius": "80%"
+	},
+	"data": {
+		"content": [
+			{
+				"label": "Есть",
+				"value": {{ton_request.docs_with_ton_obj}},
+				"color": "#996633"
+			},
+			{
+				"label": "Нет",
+				"value": {{ton_request.docs_without_ton_obj}},
+				"color": "#663300"
+			}
+		]
+	},
+	"labels": {
+		"outer": {
+			"format": "label-value2",
+			"pieDistance": 32
+		},
+		"inner": {
+			// "format": "none"
+		},
+		"mainLabel": {
+			"font": "verdana",
+			"fontSize": 16
+		},
+		"percentage": {
+			"color": "#FFFFFF",
+			"font": "verdana",
+			"fontSize": 16,
+			"decimalPlaces": 0
+		},
+		"value": {
+			"color": "#000000",
+			"font": "verdana",
+			"fontSize": 16
+		},
+		"lines": {
+			"enabled": true
+		}
+	},
+	"effects": {
+		"load": {
+			"effect": "none",
+			"speed": 100
+		},
+		"pullOutSegmentOnClick": {
+			"effect": "linear",
+			"speed": 100,
+			"size": 30
+		}
+	},
+	"misc": {
+		"gradient": {
+			"enabled": true,
+			"percentage": 80,
+			"color": ""
+		}
+	},
+	"callbacks": {
+		onClickSegment: function(seg){
+			if (seg.index == 0) {
+				window.location.href = "/details?id_req={{id_req}}&docs_ton_type=all_with_ton_obj"
+			}
+			else if (seg.index == 1) {
+				window.location.href = "/details?id_req={{id_req}}&docs_ton_type=all_without_ton_obj"
+			}
+		}
+	}
+});
+</script>
+</body>
