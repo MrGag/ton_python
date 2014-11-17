@@ -2,7 +2,7 @@
 # Сервер для работы Вебинтерфейса
 
 import json
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 import datetime
 from os import listdir
 import uuid
@@ -12,39 +12,60 @@ from dsextras import list_files
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 def list_requests_form():
-    """Отображает список всех поисковых запросов"""
-    
-    def get_ton(pos, neg, net):
-        ton = ""
-        if pos>neg and pos>net:
-            ton = "pos"
-        elif neg>pos and neg>net:
-            ton = "neg"
-        elif net>pos and net>neg:
-            ton = "net"
-        return ton
-    
-    list_requests = []
-    for ton_req in TonRequest.query.order_by(TonRequest.date_add.desc()).all():
-        if ton_req.complete_status:
-            status = u"complete"
-        else:
-            status = u"process"
-        list_requests.append({"status": status,
-                              "name": ton_req.name,
-                              "ton_name": u", ".join(x.obj_text for x in ton_req.tonObjects),
-                              "neg": "{:.0f}".format(ton_req.neg_percent),
-                              "pos": "{:.0f}".format(ton_req.pos_percent),
-                              "net": "{:.0f}".format(ton_req.net_percent),
-                              "date": ton_req.date_add.strftime("%d.%m.%Y %H:%M"),
-                              "uuid": ton_req.uuid,
-                              "ton": get_ton(ton_req.pos_percent, ton_req.neg_percent, ton_req.net_percent),
-                              "complete_percent": ton_req.complete_percent,
-                              "id_req": ton_req.id
-                              })
-    return render_template("list_requests.html", requests=list_requests )
+    if request.method == "POST":
+        """ Запускает на обработку новый запрос, возвращает уникальный идентификатор нового запроса """
+        request_uuid = str(uuid.uuid4()).decode("utf-8")
+        list_requests = request.files["request_file"].readlines()
+        request_name = list_requests[0]
+        files_list = list_requests[1:]
+        ton_req = TonRequest(request_name.decode("utf-8"), len(files_list), request_uuid)
+        ton_doc_list = []
+        for doc in files_list:
+            ton_doc_list.append(TonDocuments(url_doc=doc.decode("utf-8")))
+        ton_req.docs = ton_doc_list
+        ton_obj_list = []
+        for text_tonobj in request.form["ton_name"].split(","):
+            ton_obj_list.append(TonObj(text_tonobj.encode("utf-8").strip().decode("utf-8")))
+        ton_req.tonObjects = ton_obj_list
+        ton_db.session.add(ton_req)
+        ton_db.session.commit()
+        subprocess.Popen(["python", "../requests_processing/process_new_request.py", str(ton_req.id)])
+        return redirect("/")
+    else:
+        """Отображает список всех поисковых запросов"""
+        def get_ton(pos, neg, net):
+            ton = ""
+            if pos>neg and pos>net:
+                ton = "pos"
+            elif neg>pos and neg>net:
+                ton = "neg"
+            else:
+                ton = "net"
+            
+            return ton
+        
+        list_requests = []
+        for i, ton_req in enumerate(TonRequest.query.order_by(TonRequest.date_add.desc()).all(), 1):
+            if ton_req.complete_status:
+                status = u"complete"
+            else:
+                status = u"process"
+            list_requests.append({"status": status,
+                                  "name": ton_req.name,
+                                  "ton_name": u", ".join(x.obj_text for x in ton_req.tonObjects),
+                                  "neg": "{:.0f}".format(ton_req.neg_percent),
+                                  "pos": "{:.0f}".format(ton_req.pos_percent),
+                                  "net": "{:.0f}".format(ton_req.net_percent),
+                                  "date": ton_req.date_add.strftime("%d.%m.%Y %H:%M"),
+                                  "uuid": ton_req.uuid,
+                                  "ton": get_ton(ton_req.pos_percent, ton_req.neg_percent, ton_req.net_percent),
+                                  "complete_percent": ton_req.complete_percent,
+                                  "id_req": ton_req.id,
+                                  "i": int(i)
+                                  })
+        return render_template("list_requests.html", requests=list_requests )
 
 @app.route("/upload/", methods=["GET", "POST"])
 def upload_new_request():
@@ -130,10 +151,11 @@ def details_request():
         res_docs = ton_req.docs.filter(TonDocuments.have_ton_obj == False).all()            
     
     list_res_docs = []
-    for doc in res_docs:
+    for i, doc in enumerate(res_docs, 1):
         list_res_docs.append({"url":doc.url_doc,
                               "name": doc.url_doc.split("/")[-1],
                               "ton": get_ton(doc.pos_prec, doc.neg_prec),
+                              "i": int(i),
                               "ton_sents":({"text":x.sent_text,
                                             "pos":int(x.pos_prob*100),
                                             "neg":int(x.neg_prob*100),

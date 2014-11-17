@@ -7,6 +7,7 @@ import requests
 import sys
 import time
 from src.sql_model.sql_req import TonDocuments, TonObj, TonRequest, TonSentences, ton_db
+import traceback
 
 
 def process_request(request_id):  
@@ -29,6 +30,7 @@ def process_request(request_id):
             r_pass.encoding = "utf-8"
             xml_root = et.fromstring(r_pass.text.encode("utf-8"))
             pass_text = xml_root.find("resultData/text").text.strip()
+#             print("pass_text type {0}".format())
             data_json = {"text":pass_text, "ton_name":ton_name, "doc_id":passport.id}
             r = requests.post(url, data=json.dumps(data_json), headers={'content-type': 'text/plain'})
             req_from_ton_server = json.loads(r.text)
@@ -53,7 +55,11 @@ def process_request(request_id):
         except KeyboardInterrupt:
             exit()
         except:
+            print("### Error ####")
             print("Error in file: {0}".format(passport_file_name.strip()))
+            traceback.print_exc(file=sys.stdout)
+#             print("request:")
+#             print(r.text)
     
     # Сохраняем результат
     count_ton_docs = ton_req.docs.filter(TonDocuments.have_ton_obj == True).count()

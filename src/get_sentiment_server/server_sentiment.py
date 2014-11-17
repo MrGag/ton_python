@@ -74,6 +74,9 @@ def get_sentiment(inp_str, dics, tokenizer, punkt_sent_token, stemer):
     sent_obj=define_obj(inp_str)
     vect_sent_obj=vectorizer.transform([sent_obj])
     pred = clf.predict_proba(vect_sent_obj)
+    # Если разница между позитивной оценкой и негативной меньше 5% то предложение нейтрально
+    if abs(pred[0][0] - pred[0][1])<0.05:
+        pred[0] = [0.5, 0.5]
     return pred
 
 def find_object(name_obj,  inp_str, inp_doc_id):
@@ -102,12 +105,12 @@ def find_object(name_obj,  inp_str, inp_doc_id):
                     ton_sents_list.append(TonSentences(sent.decode("utf-8"), sentiment_val[0][1], sentiment_val[0][0]))
                     flag=True
     if flag==False:
-        res["neg"]=0
-        res["pos"]=0
+        res["neg"]=0.
+        res["pos"]=0.
         ton_doc.have_ton_obj = False
     else:
-        pos=0
-        neg=0
+        pos=0.
+        neg=0.
         for var in otvet:
             pos+=var[0][1]
             neg+=var[0][0]
@@ -118,8 +121,9 @@ def find_object(name_obj,  inp_str, inp_doc_id):
             ton_doc.ton = "pos"
         elif pos<neg:
             ton_doc.ton = "neg"
-        elif pos==neg:
+        else:
             ton_doc.ton = "net"
+
     ton_doc.tonSents = ton_sents_list
     ton_db.session.add(ton_doc)
     ton_db.session.commit()      
@@ -154,4 +158,4 @@ def sentiment_post():
     return json.dumps(res)
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True, use_reloader=False)
