@@ -13,12 +13,6 @@
     <div class="navbar navbar-inverse" role="navigation">
       <div class="navbar-header">
         <div class="logo"><h1>Анализ тональности</h1></div>
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button> 
       </div>   
     </div>
     <div class="template-page-wrapper">
@@ -30,7 +24,7 @@
           </ol>
           <h1>Список запросов на анализ тональности</h1>
           <p>Результаты анализа документов на тональность. Обновление таблицы происходит не автоматически, пользуйтес кнопкой Обновить или F5.</p>
-          <a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i>Добавить новый запрос</a>
+          <a href="/upload/">Добавить новый запрос</a>
           <p></p>
 
           <div class="row">
@@ -56,7 +50,7 @@
                   	<tr {% if request.ton == 'pos' %}class="success"{% endif %}
                         {% if request.ton == 'neg' %}class="danger"{% endif %}>
                       <td>{{request.i}}</td>
-          						<td class="requests_name">{{request.name}} {{request.ton}}</td>
+          						<td class="requests_name">{{request.name}}</td>
           						<td>{{request.ton_name}}</td>
           						<td>{{request.date}}</td>
           						{% if request.status == "complete"%}

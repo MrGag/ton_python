@@ -6,7 +6,7 @@ import nltk
 from nltk.tokenize import TreebankWordTokenizer, PunktSentenceTokenizer
 from sklearn.externals import joblib
 from flask import Flask, request, render_template
-from src.sql_model.sql_req import TonDocuments, TonObj, TonRequest, TonSentences, ton_db
+from sql_model.sql_req import TonDocuments, TonObj, TonRequest, TonSentences, ton_db
 
 app = Flask(__name__)
 

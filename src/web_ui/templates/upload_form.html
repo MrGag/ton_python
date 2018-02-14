@@ -1,24 +1,60 @@
 <!DOCTYPE html>
-<html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <head>
-	<title>Загрузка нового запроса</title>
+  <meta charset="utf-8">
+  <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+  <title>Анализ тональности</title>
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width">        
+  <link rel="stylesheet" href="/static/css/templatemo_main.css">
 </head>
 <body>
-{% if upload_req %}
-<p>Запрос успешно направлен на анализ тональности.</p>
-<p>Уникальный идентификатор запроса: {{req_uuid}}</p>
-<input type="button" value="Закрыть" onclick="window.close()">
-{% else %}
-<h1>Добавление нового запрося для анализа на тональность</h1>
-<form enctype="multipart/form-data" method="post" action="/upload/">
-	<input type="file" name="request_file">
-	<br></br>
-	<h3>Объект тональности</h3>
-	<input type="text" name="ton_name">
-	<br></br>
-	<input type="submit">
-</form>
-{% endif %}
+  <div id="main-wrapper">
+    <div class="navbar navbar-inverse" role="navigation">
+      <div class="navbar-header">
+        <div class="logo"><h1>Анализ тональности</h1></div>
+      </div>   
+    </div>
+    <div class="template-page-wrapper">
+
+      <div class="templatemo-content-wrapper">
+        <div class="templatemo-content">
+        	<ol class="breadcrumb">
+        		<li><a href="/">Список запросов</a></li>
+        	</ol>
+			<h1>Добавление нового запрося для анализа на тональность</h1>
+			<div class="row">
+				<div class="col-md-12">
+					<form enctype="multipart/form-data" method="post" action="/">
+						<div class="row">
+							<div class="col-md-8">
+								<label for="firstName" class="control-label">Объект тональности</label>
+								<input type="text" class="form-control" name="ton_name">
+							</div>
+							<div class="col-md-4">
+								<label for="exampleInputFile">Запрос</label>
+								<input type="file" name="request_file" id="exampleInputFile">
+								<p class="help-block">Загрузите файл с запросом</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<button type="submit" class="btn btn-primary">Загрузить</button>
+								<button type="reset" class="btn btn-default">Очистить</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	  </div>
+	</div>
+  <footer class="templatemo-footer">
+	<div class="templatemo-copyright">
+		<p>2014 Системпром</p>
+	</div>
+  </footer>
+
+</div>
 </body>
 </html>

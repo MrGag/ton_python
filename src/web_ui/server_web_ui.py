@@ -7,8 +7,7 @@ import datetime
 from os import listdir
 import uuid
 import subprocess
-from src.sql_model.sql_req import TonDocuments, TonObj, TonRequest, TonSentences, ton_db
-from dsextras import list_files
+from sql_model.sql_req import TonDocuments, TonObj, TonRequest, TonSentences, ton_db
 
 app = Flask(__name__)
 
@@ -162,12 +161,13 @@ def details_request():
                                             "sent_ton": get_ton(x.pos_prob, x.neg_prob)
                                             } for x in doc.tonSents)})
     
-    
+    pyLegendTemplate = "<ul class=\\\"<%=name.toLowerCase()%>-legend\\\"><% for (var i=0; i<segments.length; i++){%><li><span class=\\\"badge\\\" style=\\\"background-color:<%=segments[i].fillColor%>\\\"><%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
     return render_template("request_details.html",
                            ton_request=ton_req_data,
                            list_docs=list_res_docs,
                            type_ton_docs=type_ton_docs,
-                           id_req=id_req)
+                           id_req=id_req,
+                           pyLegendTemplate=pyLegendTemplate)
 
 @app.route("/delete_request", methods=["GET"])
 def delete_request():

@@ -6,8 +6,8 @@ from os import chdir, environ
 from os.path import dirname, realpath, sep
 
 # Позволяет запускать из консоли
-python_path = dirname(realpath(__file__)) + sep + ":" + dirname(realpath(__file__)) + sep + "src" + sep
-environ["PYTHONPATH"] = environ.get("PYTHONPATH", "") + python_path
+#python_path = dirname(realpath(__file__)) + sep + ":" + #dirname(realpath(__file__)) + sep + "src" + sep
+#environ["PYTHONPATH"] = environ.get("PYTHONPATH", "") + #python_path
 
 chdir("src/get_sentiment_server")
 server_sent = subprocess.Popen(["python", "server_sentiment.py"])

@@ -66,9 +66,9 @@
           		<div class="col-md-4" id="myChartLegend_ton" style="float:left">
                 <h5>Распределение тональности в документах:</h5>
                 <ul class="pie-legend">
-                  <li><span class="badge" style="background-color:#23C14C">{{"%0.0f" | format(ton_request.count_pos/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Положительных, <a href="/details?id_req={{id_req}}&docs_ton_type=pos">{{ton_request.count_pos}} док.</a></li>
-                  <li><span class="badge" style="background-color:#A61F1F">{{"%0.0f" | format(ton_request.count_neg/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Отрицательных, <a href="/details?id_req={{id_req}}&docs_ton_type=neg">{{ton_request.count_neg}} док.</a></li>
-                  <li><span class="badge" style="background-color:#4872EB">{{"%0.0f" | format(ton_request.count_net/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Нейтральных, <a href="/details?id_req={{id_req}}&docs_ton_type=net">{{ton_request.count_net}} док.</a></li>
+                  <li><span class="badge" style="background-color:#23C14C">{{"%0.1f" | format(ton_request.count_pos/ton_request.count_docs*100)}}%</span> Положительных, <a href="/details?id_req={{id_req}}&docs_ton_type=pos">{{ton_request.count_pos}} док.</a></li>
+                  <li><span class="badge" style="background-color:#A61F1F">{{"%0.1f" | format(ton_request.count_neg/ton_request.count_docs*100)}}%</span> Отрицательных, <a href="/details?id_req={{id_req}}&docs_ton_type=neg">{{ton_request.count_neg}} док.</a></li>
+                  <li><span class="badge" style="background-color:#4872EB">{{"%0.1f" | format(ton_request.count_net/ton_request.count_docs*100)}}%</span> Нейтральных, <a href="/details?id_req={{id_req}}&docs_ton_type=net">{{ton_request.count_net}} док.</a></li>
                 </ul>  
               </div>
               <div class="col-md-2" style="float:left"><canvas id="myChart_docs_tonobj" width="200" height="200"></canvas></div>

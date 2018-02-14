@@ -6,7 +6,7 @@ import xml.etree.cElementTree as et
 import requests
 import sys
 import time
-from src.sql_model.sql_req import TonDocuments, TonObj, TonRequest, TonSentences, ton_db
+from sql_model.sql_req import TonDocuments, TonObj, TonRequest, TonSentences, ton_db
 import traceback
 
 
@@ -63,9 +63,14 @@ def process_request(request_id):
     
     # Сохраняем результат
     count_ton_docs = ton_req.docs.filter(TonDocuments.have_ton_obj == True).count()
-    ton_req.pos_percent = float(count_pos)/float(count_ton_docs)*100
-    ton_req.neg_percent = float(count_neg)/float(count_ton_docs)*100
-    ton_req.net_percent = float(count_net)/float(count_ton_docs)*100
+    if count_ton_docs > 0:
+        ton_req.pos_percent = float(count_pos)/float(count_ton_docs)*100
+        ton_req.neg_percent = float(count_neg)/float(count_ton_docs)*100
+        ton_req.net_percent = float(count_net)/float(count_ton_docs)*100
+    else:
+        ton_req.pos_percent = 0.0
+        ton_req.neg_percent = 0.0
+        ton_req.net_percent = 0.0
     ton_req.complete_status = True
     ton_req.complete_percent = 100
     ton_db.session.add(ton_req)
