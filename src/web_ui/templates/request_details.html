@@ -11,6 +11,7 @@
         <script src="static/js/excanvas.js"></script>
   <![endif]-->
 </head>
+<body>
 <!--[if lt IE 9]>
 <body class="oldie">
 <![endif]-->
@@ -27,63 +28,71 @@
 
       <div class="templatemo-content-wrapper">
         <div class="templatemo-content">
-          <ol class="breadcrumb">
-            <li><a href="/">Список запросов</a></li>
-          </ol>
-          <h1>Детализированное представление запроса</h1>
-          <div class="row">
-            <div class="col-md-12">
-              <h4>Общие характеристки</h4>
-              <table class="table table-striped table-hover table-bordered">
-                <tr>
-                  <td style="width:20%">Дата добавления:</td>
-                  <td style="width:80%">{{ton_request.date}}</td>
-                </tr>
-                <tr>
-                  <td style="width:20%">Текст запроса:</td>
-                  <td style="width:80%">{{ton_request.name}}</td>
-                </tr>
-                <tr>
-                  <td style="width:20%">Объект тональности:</td>
-                  <td style="width:80%">{{ton_request.tonObjects}}</td>
-              </table>
+
+          <div class="container-fluid">
+            <ol class="breadcrumb">
+              <li><a href="/">Список запросов</a></li>
+            </ol>
+            <h1>Детализированное представление запроса</h1>
+            <h4>Общие характеристки</h4>
+            <div class="row">
+              <div class="col-md-6">
+                <table class="table table-striped table-hover table-bordered">
+                  <tr>
+                    <td style="width:20%">Дата добавления:</td>
+                    <td style="width:80%">{{ton_request.date}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:20%">Название запроса:</td>
+                    <!-- <td style="width:20%">Текст запроса:</td> -->
+                    <td style="width:80%">{{ton_request.name}}</td>
+                  </tr>
+                  <tr>
+                    <td style="width:20%">Объект тональности:</td>
+                    <td style="width:80%">{{ton_request.tonObjects}}</td>
+                </table>
+              </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
+            <!-- <div class="row"> -->
               <p>Всего документов в запросе: <span class="badge">{{ton_request.count_docs}}</span></p>
-            </div>
+            <!-- </div> -->
           </div>
-          <div class="row"><div class="col-md-12"><p></p></div></div>
-          <div class="row">
-            <div class="col-md-12">
-              <h4>Общая тональность</h4>
-            </div>
-          </div>
-          <div class="row">
-          	<div class="col-md-12">
-          		<div class="col-md-2" style="float:left"><canvas id="myChart_ton" width="200" height="200"></canvas></div>
-          		<div class="col-md-4" id="myChartLegend_ton" style="float:left">
-                <h5>Распределение тональности в документах:</h5>
-                <ul class="pie-legend">
-                  <li><span class="badge" style="background-color:#23C14C">{{"%0.0f" | format(ton_request.count_pos/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Положительных, <a href="/details?id_req={{id_req}}&docs_ton_type=pos">{{ton_request.count_pos}} док.</a></li>
-                  <li><span class="badge" style="background-color:#A61F1F">{{"%0.0f" | format(ton_request.count_neg/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Отрицательных, <a href="/details?id_req={{id_req}}&docs_ton_type=neg">{{ton_request.count_neg}} док.</a></li>
-                  <li><span class="badge" style="background-color:#4872EB">{{"%0.0f" | format(ton_request.count_net/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Нейтральных, <a href="/details?id_req={{id_req}}&docs_ton_type=net">{{ton_request.count_net}} док.</a></li>
-                </ul>  
-              </div>
-              <div class="col-md-2" style="float:left"><canvas id="myChart_docs_tonobj" width="200" height="200"></canvas></div>
-              <div class="col-md-4" id="myChartLegend_docs_tonobj" style="float:left">
-                <h5>Наличие объекта тональности в документах:</h5>
-                <ul class="pie-legend">
-                  <li><span class="badge" style="background-color:#996633">{{"%0.1f" | format(ton_request.docs_with_ton_obj/ton_request.count_docs*100)}}%</span> Есть, <a href="/details?id_req={{id_req}}&docs_ton_type=all_with_ton_obj">{{ton_request.docs_with_ton_obj}} док.</a></li>
-                  <li><span class="badge" style="background-color:#663300">{{"%0.1f" | format(ton_request.docs_without_ton_obj/ton_request.count_docs*100)}}%</span> Нет, <a href="/details?id_req={{id_req}}&docs_ton_type=all_without_ton_obj">{{ton_request.docs_without_ton_obj}} док.</a></li>
-                </ul>  
-              </div>
-          	</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12">
+
+          <div class="container-fluid">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#docs">Документы</a></li>
+              <li><a data-toggle="tab" href="#source">Источники</a></li>
+            </ul>
+
+            <div class="tab-content">
+
+              <div id="docs" class="tab-pane fade in active">
+
+                <div class="container-fluid">
+                  <h4>Общая тональность</h4>
+                  <div class="row">
+                    <div class="col-md-2" style="float:left"><canvas id="myChart_ton" width="200" height="200"></canvas></div>
+                    <div class="col-md-4" id="myChartLegend_ton" style="float:left">
+                      <h5>Распределение тональности в документах:</h5>
+                      <ul class="pie-legend">
+                        <li><span class="badge" style="background-color:#23C14C">{{"%0.0f" | format(ton_request.count_pos/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Положительных, <a href="/details?id_req={{id_req}}&docs_ton_type=pos">{{ton_request.count_pos}} док.</a></li>
+                        <li><span class="badge" style="background-color:#A61F1F">{{"%0.0f" | format(ton_request.count_neg/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Отрицательных, <a href="/details?id_req={{id_req}}&docs_ton_type=neg">{{ton_request.count_neg}} док.</a></li>
+                        <li><span class="badge" style="background-color:#4872EB">{{"%0.0f" | format(ton_request.count_net/(ton_request.count_docs-ton_request.docs_without_ton_obj)*100)}}%</span> Нейтральных, <a href="/details?id_req={{id_req}}&docs_ton_type=net">{{ton_request.count_net}} док.</a></li>
+                      </ul>  
+                    </div>
+                    <div class="col-md-2" style="float:left"><canvas id="myChart_docs_tonobj" width="200" height="200"></canvas></div>
+                    <div class="col-md-4" id="myChartLegend_docs_tonobj" style="float:left">
+                      <h5>Наличие объекта тональности в документах:</h5>
+                      <ul class="pie-legend">
+                        <li><span class="badge" style="background-color:#996633">{{"%0.1f" | format(ton_request.docs_with_ton_obj/ton_request.count_docs*100)}}%</span> Есть, <a href="/details?id_req={{id_req}}&docs_ton_type=all_with_ton_obj">{{ton_request.docs_with_ton_obj}} док.</a></li>
+                        <li><span class="badge" style="background-color:#663300">{{"%0.1f" | format(ton_request.docs_without_ton_obj/ton_request.count_docs*100)}}%</span> Нет, <a href="/details?id_req={{id_req}}&docs_ton_type=all_without_ton_obj">{{ton_request.docs_without_ton_obj}} док.</a></li>
+                      </ul>  
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="row"> -->
+                  <!-- <div class="col-md-12"> -->
                 {% if type_ton_docs == "pos" %}
                 <h4>Список позитивных документов и их тональных предложений (поз./нег.)</h4>
                 {% elif type_ton_docs == "neg"%}
@@ -100,7 +109,7 @@
                   <div class="panel panel-default">
                     <div class="panel-heading" id="panel{{doc.ton}}">
                       <!-- <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse{{doc.i}}">{{doc.name}}</a></h4> -->
-                      <h4 class="panel-title"><a  target="_blank" href="{{doc.url}}">{{doc.name}}</a></h4>
+                      <h4 class="panel-title"><a target="_blank" href="{{doc.url}}">{{doc.name}}</a></h4>
                     </div>
                     <div id="collapse{{doc.i}}" class="panel-collapse collapse in">
                       <div class="panel-body">
@@ -112,8 +121,94 @@
                   </div>
                   {% endfor %}
                 </div>
+              </div>
+
+              <div id="source" class="tab-pane fade">
+                <h4>Список источников</h4>
+<!--                 {% if type_ton_docs == "pos" %}
+                <h4>Список позитивных документов и их тональных предложений (поз./нег.)</h4>
+                {% elif type_ton_docs == "neg"%}
+                <h4>Список негативных документов и их тональных предложений (поз./нег.)</h4>
+                {% elif type_ton_docs == "net"%}
+                <h4>Список нейтральных документов (поз./нег.)</h4>
+                {% elif type_ton_docs == "all_with_ton_obj"%}
+                <h4>Список всех документов с объектом тональности и их тональных предложений (поз./нег.)</h4>
+                {% elif type_ton_docs == "all_without_ton_obj"%}
+                <h4>Список документов без объекта тональности</h4>
+                {% endif %} -->
+                <div class="panel-group" id="accordion">
+                  {% for source in list_source %}
+                  <div class="panel panel-default">
+                    <div class="panel-heading" id="panel{{source.name}}">
+                      <!-- <h4 class="panel-title"><a target="_blank" href="{{source.url}}">{{source.name}}</a></h4> -->
+                      <h4 class="panel-title">
+<!--                         <a href="#" title="Информация об источнике" data-toggle="popover" data-placement="right"  data-trigger="focus"
+                        data-content="<a href='#' data-toggle='modal' data-target='#myModal'>Open Modal</a>">
+                          {{source.name}}
+                        </a> -->
+                        <a  href="#" data-toggle="modal" data-target="#sourceModal{{source.i}}">{{source.name}}</a>
+                      </h4>
+                    </div>
+
+                    <div id="sourceModal{{source.i}}" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Данные об источнике</h4>
+                          </div>
+                          <div class="modal-body">
+                            <p>Some text in the modal.</p>
+                            <form>
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Поле 1:</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                              </div>
+                              <div class="form-check">
+                                <label for="message-text" class="col-form-label">Поле 2:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-primary">Сохранить</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div id="collapse{{source.i}}" class="panel-collapse collapse in"> -->
+                    <div class="panel-body">
+                      <div class="row">
+                        <div class=col-md-6>
+
+                        </div>
+                        <div class=col-md-6>
+                          <div class="progress">
+                            <div class="progress-bar progress-bar-success" role="progressbar" style="width:{{source.pos_docs / (source.pos_docs + source.neg_docs + source.net_docs) * 100}}%">
+                              {{source.pos_docs}}
+                            </div>
+                            <div class="progress-bar progress-bar-info" role="progressbar" style="width:{{source.net_docs / (source.pos_docs + source.neg_docs + source.net_docs) * 100}}%">
+                              {{source.net_docs}}
+                            </div>
+                            <div class="progress-bar progress-bar-danger" role="progressbar" style="width:{{source.neg_docs / (source.pos_docs + source.neg_docs + source.net_docs) * 100}}%">
+                              {{source.neg_docs}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+
             </div>
+
           </div>
+
         </div>
       </div>
 
@@ -123,43 +218,45 @@
         </div>
       </footer>
     </div>
-</div>
-    <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/templatemo_script.js"></script>
-    <script src="static/js/Chart.js"></script>
-    <script>
-    	var isOldIE = $("body").hasClass("oldie");
-		  var $ctx = document.getElementById("myChart_ton");
-		  var ctx = $ctx
-		  if(isOldIE) {
-        ctx = G_vmlCanvasManager.initElement(ctx);
-        }
+  </div>
 
-    	var data = [
-		    {
-		        value: {{ton_request.count_pos}},
-		        color:"#23C14C",
-		        highlight: "#59D46D",
-		        label: "Положительных"
-		    },
-		    {
-		        value: {{ton_request.count_neg}},
-		        color: "#A61F1F",
-		        highlight: "#B53D3D",
-		        label: "Отрицательных"
-		    },
-		    {
-		        value: {{ton_request.count_net}},
-		        color: "#4872EB",
-		        highlight: "#6C8DEB",
-		        label: "Нейтральных"
-		    }
-			]
-    	var myPieChart = new Chart(ctx.getContext("2d")).Pie(data, {animationSteps:1});
-    </script>
 
-    <script>
+  <script src="static/js/jquery.min.js"></script>
+  <script src="static/js/bootstrap.min.js"></script>
+  <script src="static/js/templatemo_script.js"></script>
+  <script src="static/js/Chart.js"></script>
+  <script>
+    var isOldIE = $("body").hasClass("oldie");
+    var $ctx = document.getElementById("myChart_ton");
+    var ctx = $ctx
+    if(isOldIE) {
+      ctx = G_vmlCanvasManager.initElement(ctx);
+      }
+
+    var data = [
+      {
+          value: {{ton_request.count_pos}},
+          color:"#23C14C",
+          highlight: "#59D46D",
+          label: "Положительных"
+      },
+      {
+          value: {{ton_request.count_neg}},
+          color: "#A61F1F",
+          highlight: "#B53D3D",
+          label: "Отрицательных"
+      },
+      {
+          value: {{ton_request.count_net}},
+          color: "#4872EB",
+          highlight: "#6C8DEB",
+          label: "Нейтральных"
+      }
+    ]
+    var myPieChart = new Chart(ctx.getContext("2d")).Pie(data, {animationSteps:1});
+  </script>
+
+  <script>
     var isOldIE = $("body").hasClass("oldie");
     var $ctx = document.getElementById("myChart_docs_tonobj");
     var ctx = $ctx
@@ -167,21 +264,27 @@
         ctx = G_vmlCanvasManager.initElement(ctx);
       }
 
-      var data = [
-        {
-            value: {{ton_request.docs_with_ton_obj}},
-            color:"#996633",
-            highlight: "#BD8E60",
-            label: "Есть"
-        },
-        {
-            value: {{ton_request.docs_without_ton_obj}},
-            color: "#663300",
-            highlight: "#664625",
-            label: "Нет"
-        }
-      ]
-      var myPieChart = new Chart(ctx.getContext("2d")).Pie(data, {animationSteps:1});
-    </script>
-  </body>
+    var data = [
+      {
+          value: {{ton_request.docs_with_ton_obj}},
+          color:"#996633",
+          highlight: "#BD8E60",
+          label: "Есть"
+      },
+      {
+          value: {{ton_request.docs_without_ton_obj}},
+          color: "#663300",
+          highlight: "#664625",
+          label: "Нет"
+      }
+    ]
+    var myPieChart = new Chart(ctx.getContext("2d")).Pie(data, {animationSteps:1});
+  </script>
+
+  <script>
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({html:true}); 
+    });
+  </script>
+</body>
 </html>
