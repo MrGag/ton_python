@@ -66,6 +66,7 @@ def list_requests_form():
                                   })
         return render_template("list_requests.html", requests=list_requests )
 
+
 @app.route("/upload/", methods=["GET", "POST"])
 def upload_new_request():
     """ Запускает на обработку новый запрос, возвращает уникальный идентификатор нового запроса """
@@ -107,7 +108,8 @@ def details_request():
     id_req = request.args.get("id_req")
     type_ton_docs = request.args.get("docs_ton_type") # all, pos, neg, net, all_with_ton_obj, all_without_ton_obj
     if type_ton_docs is None:
-        type_ton_docs = u"None"
+        # type_ton_docs = u"None"
+        type_ton_docs = u"all"
     
     count_pos_docs = ton_req.docs.filter(TonDocuments.ton == "pos" and TonDocuments.have_ton_obj == True).count()
     count_neg_docs = ton_req.docs.filter(TonDocuments.ton == "neg" and TonDocuments.have_ton_obj == True).count()
@@ -160,14 +162,29 @@ def details_request():
                                             "neg":int(x.neg_prob*100),
                                             "sent_ton": get_ton(x.pos_prob, x.neg_prob)
                                             } for x in doc.tonSents)})
-    
+
+    list_res_source = []
+    for i, doc in enumerate(res_docs, 1):
+        list_res_source.append({"url": doc.url_doc,
+                                "name": u"Источник " + str(i),
+                                "pos_docs": 10,
+                                "neg_docs": 5,
+                                "net_docs": 1,
+                                "i": int(i),
+                                "gos": True,
+                                "popularity": 5,
+                                "in_database": True,
+	                            })
+	    
     pyLegendTemplate = "<ul class=\\\"<%=name.toLowerCase()%>-legend\\\"><% for (var i=0; i<segments.length; i++){%><li><span class=\\\"badge\\\" style=\\\"background-color:<%=segments[i].fillColor%>\\\"><%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
     return render_template("request_details.html",
                            ton_request=ton_req_data,
                            list_docs=list_res_docs,
+                           list_source=list_res_source,
                            type_ton_docs=type_ton_docs,
                            id_req=id_req,
                            pyLegendTemplate=pyLegendTemplate)
+
 
 @app.route("/delete_request", methods=["GET"])
 def delete_request():
@@ -179,4 +196,4 @@ def delete_request():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8081, debug=False)
+    app.run(host="0.0.0.0", port=8081, debug=True)
