@@ -92,7 +92,7 @@ def upload_new_request():
         return render_template("upload_form.html", upload_req=False)
 
 
-@app.route("/details", methods=["GET"])
+@app.route("/details", methods=["GET", "POST"])
 def details_request():
     def get_ton(pos, neg):
         ton = ""
