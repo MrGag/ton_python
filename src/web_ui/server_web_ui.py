@@ -190,9 +190,10 @@ def details_request():
 def save_source():
     if request.method == "POST":
         print "save post"
-        print request.form['source']
-        print request.form['gos']
-        print request.form['popularity']
+
+        for key in request.form:
+            print key, request.form[key]
+
         return json.dumps({'success': True}), 200, {'ContentType':'application/json'} 
     # else:
     #     return False
@@ -202,9 +203,10 @@ def save_source():
 def add_source():
     if request.method == "POST":
         print "add post"
-        print request.form['source']
-        print request.form['gos']
-        print request.form['popularity']
+
+        for key in request.form:
+            print key, request.form[key]
+
         return json.dumps({'success': True}), 200, {'ContentType':'application/json'} 
     # else:
     #     return False
