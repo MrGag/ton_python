@@ -127,39 +127,23 @@
 
               <div id="source" class="tab-pane fade">
                 <h4>Список источников</h4>
-<!--                 {% if type_ton_docs == "pos" %}
-                <h4>Список позитивных документов и их тональных предложений (поз./нег.)</h4>
-                {% elif type_ton_docs == "neg"%}
-                <h4>Список негативных документов и их тональных предложений (поз./нег.)</h4>
-                {% elif type_ton_docs == "net"%}
-                <h4>Список нейтральных документов (поз./нег.)</h4>
-                {% elif type_ton_docs == "all_with_ton_obj"%}
-                <h4>Список всех документов с объектом тональности и их тональных предложений (поз./нег.)</h4>
-                {% elif type_ton_docs == "all_without_ton_obj"%}
-                <h4>Список документов без объекта тональности</h4>
-                {% endif %} -->
-                <div class="panel-group" id="accordion">
+                <div class="panel-group" id="sources">
                   {% for source in list_source %}
                   <div class="panel panel-default">
-                    <div class="panel-heading" id="panel{{source.name}}">
-                      <!-- <h4 class="panel-title"><a target="_blank" href="{{source.url}}">{{source.name}}</a></h4> -->
+                    <div class="panel-heading" id="panel{{source.i}}"">
                       <h4 class="panel-title">
-<!--                         <a href="#" title="Информация об источнике" data-toggle="popover" data-placement="right"  data-trigger="focus"
-                        data-content="<a href='#' data-toggle='modal' data-target='#myModal'>Open Modal</a>">
-                          {{source.name}}
-                        </a> -->
-                        <a  href="#" data-toggle="modal" data-target="#sourceModal">{{source.name}}</a>
+                        <a href="#" data-toggle="modal" data-target="#sourceModal{{source.i}}">{{source.name}}</a>
                       </h4>
                     </div>
 
-                    <div id="sourceModal" class="modal fade" role="dialog">
+                    <div id="sourceModal{{source.i}}" class="modal fade" role="dialog">
                       <div class="modal-dialog">
                         <!-- Modal content-->
                         <div class="modal-content">
                           {% if source.in_database %}
-                          <form id="formSourceModal" data-async method="post" action="/save_source">
+                          <form id="formSourceModal{{source.i}}" data-async method="post" action="/save_source">
                           {% else %}
-                          <form id="formSourceModal" data-async method="post" action="/add_source">
+                          <form id="formSourceModal{{source.i}}" data-async method="post" action="/add_source">
                           {% endif %}
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -173,9 +157,9 @@
                                 <div class="col-sm-3">
                                   <div class="form-check">
                                     {% if source.in_database and source.gos %}
-                                    <input class="form-check-input" name="gos" type="checkbox" id="gos{{source.i}}" checked>
+                                    <input class="form-check-input" name="gos" type="checkbox" id="gosForm{{source.i}}" checked>
                                     {% else %}
-                                    <input class="form-check-input" name="gos" type="checkbox" id="gos{{source.i}}">
+                                    <input class="form-check-input" name="gos" type="checkbox" id="gosForm{{source.i}}">
                                     {% endif %}
                                   </div>
                                 </div>
@@ -183,7 +167,7 @@
                               <div class="form-group row">
                                 <div class="col-sm-3">Популярность:</div>
                                 <div class="col-sm-3">
-                                  <select class="form-control" id="popularity{{source.i}}" name="popularity">
+                                  <select class="form-control" id="popularityForm{{source.i}}" name="popularity">
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -206,21 +190,22 @@
                       </div>
                     </div>
 
-                    <!-- <div id="collapse{{source.i}}" class="panel-collapse collapse in"> -->
                     <div class="panel-body">
                       <div class="row">
-                        <div class=col-md-6>
+                        <div class=col-md-6 id="panelData{{source.i}}">
+                          <div class="row">
+                            <div class="col-md-3">URL:</div>
+                            <div class="col-md-3">{{source.url}}</div>
+                          </div>
                           <div class="row">
                             <div class="col-md-3">Госпринадлежность:</div>
-                            {% if source.gos %}
-                            <div  class="col-md-3">Да</div>
-                            {% else %}
-                            <div  class="col-md-3">Нет</div>
-                            {% endif %}
+                            <div class="col-md-3" id="sourceGos{{source.i}}">
+                            {% if source.gos %} Да {% else %} Нет {% endif %}
+                            </div>
                           </div>
                           <div class="row">
                             <div class="col-md-3">Популярность:</div>
-                            <div  class="col-md-3">{{source.popularity}}</div>
+                            <div class="col-md-3"  id="sourcePop{{source.i}}">{{source.popularity}}</div>
                           </div>
                         </div>
                         <div class=col-md-6>
@@ -316,13 +301,19 @@
           label: "Нет"
       }
     ]
-    var myPieChart = new Chart(ctx.getContext("2d")).Pie(data, {animationSteps:1});
+    var myPieChart = new Chart(ctx.getContext("2d")).Pie(data, {animationSteps: 1});
   </script>
 
   <script>
     jQuery(function($) {
         $('form[data-async]').on('submit', function(event) {
             var $form = $(this);
+            var formId = $form.attr('id').slice(15)
+            var gosId = '#sourceGos' + formId;
+            var popId = '#sourcePop' + formId;
+            var gosFormId = '#gosForm' + formId;
+            var popFormId = '#gosForm' + formId;
+
 
             $.ajax({
                 type: $form.attr('method'),
@@ -331,7 +322,10 @@
 
                 success: function(data, status) {
                     // $target.html(data);
-                    $('#sourceModal').modal('hide');
+                    $('.modal').modal('hide');
+
+                    $(popId).html(popFormId.val());
+                    $(gosId).html(gosFormId.val());
                 }
             });
 
@@ -339,7 +333,6 @@
         });
     });
   </script>
-
 
   <script>
     $(document).ready(function(){
