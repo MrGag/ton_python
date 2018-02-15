@@ -92,7 +92,7 @@ def upload_new_request():
         return render_template("upload_form.html", upload_req=False)
 
 
-@app.route("/details", methods=["GET"])
+@app.route("/details", methods=["GET", "POST"])
 def details_request():
     def get_ton(pos, neg):
         ton = ""
@@ -174,8 +174,8 @@ def details_request():
                                 "gos": True,
                                 "popularity": 5,
                                 "in_database": True,
-	                            })
-	    
+                                })
+        
     pyLegendTemplate = "<ul class=\\\"<%=name.toLowerCase()%>-legend\\\"><% for (var i=0; i<segments.length; i++){%><li><span class=\\\"badge\\\" style=\\\"background-color:<%=segments[i].fillColor%>\\\"><%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
     return render_template("request_details.html",
                            ton_request=ton_req_data,
@@ -184,6 +184,30 @@ def details_request():
                            type_ton_docs=type_ton_docs,
                            id_req=id_req,
                            pyLegendTemplate=pyLegendTemplate)
+
+
+@app.route("/save_source", methods=["POST"])
+def save_source():
+    if request.method == "POST":
+        print "save post"
+        print request.form['source']
+        print request.form['gos']
+        print request.form['popularity']
+        return json.dumps({'success': True}), 200, {'ContentType':'application/json'} 
+    # else:
+    #     return False
+
+
+@app.route("/add_source", methods=["POST"])
+def add_source():
+    if request.method == "POST":
+        print "add post"
+        print request.form['source']
+        print request.form['gos']
+        print request.form['popularity']
+        return json.dumps({'success': True}), 200, {'ContentType':'application/json'} 
+    # else:
+    #     return False
 
 
 @app.route("/delete_request", methods=["GET"])
