@@ -96,11 +96,11 @@ def upload_new_request():
 def details_request():
     def get_ton(pos, neg):
         ton = ""
-        if pos>neg:
+        if pos > neg:
             ton = "pos"
-        elif pos<neg:
+        elif pos < neg:
             ton = "neg"
-        elif pos==neg:
+        elif pos == neg:
             ton = "net"
         return ton
     
@@ -170,14 +170,12 @@ def details_request():
                                 "pos_docs": 10,
                                 "neg_docs": 5,
                                 "net_docs": 1,
-                             #    "ton": get_ton(doc.pos_prec, doc.neg_prec),
                                 "i": int(i),
-	                            # "ton_docs":({"pos": int(x.pos_prob*100),
-	                            #               "neg": int(x.neg_prob*100),
-	                            #               "ney": get_ton(x.pos_prob, x.neg_prob)
-	                            #               } for x in doc.tonDocs)
-	                            })
-	    
+                                "gos": True,
+                                "popularity": 5,
+                                "in_database": True,
+                                })
+        
     pyLegendTemplate = "<ul class=\\\"<%=name.toLowerCase()%>-legend\\\"><% for (var i=0; i<segments.length; i++){%><li><span class=\\\"badge\\\" style=\\\"background-color:<%=segments[i].fillColor%>\\\"><%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
     return render_template("request_details.html",
                            ton_request=ton_req_data,
@@ -186,6 +184,32 @@ def details_request():
                            type_ton_docs=type_ton_docs,
                            id_req=id_req,
                            pyLegendTemplate=pyLegendTemplate)
+
+
+@app.route("/save_source", methods=["POST"])
+def save_source():
+    if request.method == "POST":
+        print "save post"
+
+        for key in request.form:
+            print key, request.form[key]
+
+        return json.dumps({'success': True}), 200, {'ContentType':'application/json'} 
+    # else:
+    #     return False
+
+
+@app.route("/add_source", methods=["POST"])
+def add_source():
+    if request.method == "POST":
+        print "add post"
+
+        for key in request.form:
+            print key, request.form[key]
+
+        return json.dumps({'success': True}), 200, {'ContentType':'application/json'} 
+    # else:
+    #     return False
 
 
 @app.route("/delete_request", methods=["GET"])
