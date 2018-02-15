@@ -148,29 +148,34 @@
                         data-content="<a href='#' data-toggle='modal' data-target='#myModal'>Open Modal</a>">
                           {{source.name}}
                         </a> -->
-                        <a  href="#" data-toggle="modal" data-target="#sourceModal{{source.i}}">{{source.name}}</a>
+                        <a  href="#" data-toggle="modal" data-target="#sourceModal">{{source.name}}</a>
                       </h4>
                     </div>
 
-                    <div id="sourceModal{{source.i}}" class="modal fade" role="dialog">
+                    <div id="sourceModal" class="modal fade" role="dialog">
                       <div class="modal-dialog">
                         <!-- Modal content-->
                         <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Данные об источнике</h4>
-                          </div>
-                          <div class="modal-body">
-                            <h4>{{source.name}}</h4>
-                            <form>
+                          {% if source.in_database %}
+                          <form id="formSourceModal" data-async method="post" action="/save_source">
+                          {% else %}
+                          <form id="formSourceModal" data-async method="post" action="/add_source">
+                          {% endif %}
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Данные об источнике</h4>
+                            </div>
+                            <div class="modal-body">
+                              <h4>{{source.name}}</h4>
+                              <input class="form-text" name="source" type="hidden"readonly value="{{source.url}}">
                               <div class="form-group row">
                                 <div class="col-sm-3">Госпринадлежность:</div>
                                 <div class="col-sm-3">
                                   <div class="form-check">
                                     {% if source.in_database and source.gos %}
-                                    <input class="form-check-input" type="checkbox" id="{{source.i}}" checked>
+                                    <input class="form-check-input" name="gos" type="checkbox" id="gos{{source.i}}" checked>
                                     {% else %}
-                                    <input class="form-check-input" type="checkbox" id="{{source.i}}">
+                                    <input class="form-check-input" name="gos" type="checkbox" id="gos{{source.i}}">
                                     {% endif %}
                                   </div>
                                 </div>
@@ -178,7 +183,7 @@
                               <div class="form-group row">
                                 <div class="col-sm-3">Популярность:</div>
                                 <div class="col-sm-3">
-                                  <select class="form-control" id="popularity{{source.i}}">
+                                  <select class="form-control" id="popularity{{source.i}}" name="popularity">
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -187,16 +192,16 @@
                                   </select>
                                 </div>
                               </div>
-                            </form>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
-                            {% if source.in_database %}
-                            <button type="submit" class="btn btn-primary">Сохранить</button>
-                            {% else %}
-                            <button type="submit" class="btn btn-primary">Добавить</button>
-                            {% endif %}
-                          </div>
+                            </div>
+                            <div class="modal-footer">
+                              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button> -->
+                              {% if source.in_database %}
+                              <button type="submit" class="btn btn-primary">Сохранить</button>
+                              {% else %}
+                              <button type="submit" class="btn btn-primary">Добавить</button>
+                              {% endif %}
+                            </div>
+                          </form>
                         </div>
                       </div>
                     </div>
@@ -315,9 +320,32 @@
   </script>
 
   <script>
+    jQuery(function($) {
+        $('form[data-async]').on('submit', function(event) {
+            var $form = $(this);
+
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+
+                success: function(data, status) {
+                    // $target.html(data);
+                    $('#sourceModal').modal('hide');
+                }
+            });
+
+            event.preventDefault();
+        });
+    });
+  </script>
+
+
+  <script>
     $(document).ready(function(){
         $('[data-toggle="popover"]').popover({html:true}); 
     });
   </script>
+
 </body>
 </html>
