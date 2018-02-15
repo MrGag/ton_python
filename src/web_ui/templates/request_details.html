@@ -312,8 +312,7 @@
             var gosId = '#sourceGos' + formId;
             var popId = '#sourcePop' + formId;
             var gosFormId = '#gosForm' + formId;
-            var popFormId = '#gosForm' + formId;
-
+            var popFormId = '#popularityForm' + formId;
 
             $.ajax({
                 type: $form.attr('method'),
@@ -321,11 +320,16 @@
                 data: $form.serialize(),
 
                 success: function(data, status) {
-                    // $target.html(data);
                     $('.modal').modal('hide');
 
-                    $(popId).html(popFormId.val());
-                    $(gosId).html(gosFormId.val());
+                    // alert($(gosFormId).val());
+                    // $(gosId).html($(gosFormId).val());
+                    if ($(gosFormId).val() == 'on') {
+                      $(gosId).html("Да");
+                    } else {
+                      $(gosId).html("Нет");
+                    }
+                    $(popId).html($(popFormId).val());
                 }
             });
 
